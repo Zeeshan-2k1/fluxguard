@@ -22,7 +22,9 @@
 
   <developers>
     <developer>
-      <name>FluxGuard contributors</name>
+      <name>Zeeshan Ashraf</name>
+      <email>ashraf2k1zeeshan@gmail.com</email>
+      <url>https://github.com/Zeeshan-2k1</url>
     </developer>
   </developers>
 
@@ -32,16 +34,13 @@
     <url>https://github.com/Zeeshan-2k1/fluxguard</url>
   </scm>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
+  <!--
+    IMPORTANT: No <distributionManagement> block here.
+    central-publishing-maven-plugin manages its own upload URL internally.
+    Having distributionManagement pointing to s01.oss.sonatype.org causes
+    Maven to attempt a second deploy to the old OSSRH — which fails with 401
+    for io.github.* namespaces since they live on the new Central Portal only.
+  -->
 
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
@@ -145,6 +144,8 @@
       <id>release</id>
       <build>
         <plugins>
+
+          <!-- Attaches -sources.jar (required by Maven Central) -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
@@ -158,6 +159,8 @@
               </execution>
             </executions>
           </plugin>
+
+          <!-- Attaches -javadoc.jar (required by Maven Central) -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
@@ -176,12 +179,18 @@
               </execution>
             </executions>
           </plugin>
+
+          <!-- Signs all artifacts with GPG (required by Maven Central) -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
             <version>3.2.7</version>
             <configuration>
-              <!-- CI: passphrase from MAVEN_GPG_PASSPHRASE; empty agent on runners -->
+              <!--
+                useAgent=false forces GPG to read the passphrase from the
+                gpg.passphrase server entry in settings.xml instead of
+                trying to contact a GUI pinentry agent (which doesn't exist in CI).
+              -->
               <useAgent>false</useAgent>
               <gpgArguments>
                 <arg>--pinentry-mode</arg>
@@ -198,19 +207,33 @@
               </execution>
             </executions>
           </plugin>
+
+          <!--
+            central-publishing-maven-plugin replaces nexus-staging-maven-plugin.
+            Required for io.github.* namespaces — these are on the new Central
+            Portal (central.sonatype.com), NOT on s01.oss.sonatype.org.
+            publishingServerId must match the <server><id> in settings.xml.
+            autoPublish=true: automatically releases after validation passes.
+            waitUntil=published: CI job waits until the artifact is fully live
+            (typically 10-30 min) before marking the job as successful.
+            Change waitUntil=uploaded if you don't want to wait in CI.
+          -->
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.13</version>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.6.0</version>
             <extensions>true</extensions>
             <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>uploaded</waitUntil>
+              <deploymentName>fluxguard-java-${project.version}</deploymentName>
             </configuration>
           </plugin>
+
         </plugins>
       </build>
     </profile>
   </profiles>
+
 </project>

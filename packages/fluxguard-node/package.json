@@ -1,11 +1,33 @@
 {
   "name": "fluxguard",
   "version": "0.1.0",
-  "description": "Distributed rate limiter for Node.js — Redis-backed with multiple algorithms",
+  "description": "Distributed rate limiting for Node.js: token bucket, fixed and sliding windows, Redis Lua (EVALSHA) for cluster-safe limits, Express middleware, optional Prometheus metrics — in-memory mode without Redis.",
+  "keywords": [
+    "rate-limit",
+    "rate-limiter",
+    "rate limiting",
+    "throttle",
+    "throttling",
+    "redis",
+    "ioredis",
+    "lua",
+    "distributed",
+    "express",
+    "express-middleware",
+    "middleware",
+    "token-bucket",
+    "sliding-window",
+    "fixed-window",
+    "prometheus",
+    "prom-client",
+    "typescript"
+  ],
   "license": "MIT",
+  "author": "Zeeshan Ashraf (https://github.com/Zeeshan-2k1)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zeeshan-2k1/fluxguard.git"
+    "url": "git+https://github.com/Zeeshan-2k1/fluxguard.git",
+    "directory": "packages/fluxguard-node"
   },
   "bugs": {
     "url": "https://github.com/Zeeshan-2k1/fluxguard/issues"
