@@ -19,8 +19,15 @@ jobs:
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      # Import key here instead of setup-java gpg-* inputs: those write an encrypted
+      # passphrase into settings.xml which requires ~/.m2/settings-security.xml to decrypt.
+      - name: Import GPG signing key
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "$MAVEN_GPG_PRIVATE_KEY" | gpg --batch --no-tty --import
+        env:
+          MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
       - name: Set release version from tag
         id: version
         working-directory: packages/fluxguard-java
@@ -40,3 +47,4 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
