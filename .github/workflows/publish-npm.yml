@@ -35,8 +35,8 @@ jobs:
           TAG="${{ github.event.release.tag_name }}"
           VERSION="${TAG#v}"
           cd packages/fluxguard-node
-          # Allow tag version to match package.json already (e.g. both 0.1.0)
-          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          # pkg set succeeds even when version already matches (npm version does not)
+          npm pkg set "version=${VERSION}"
       - name: Publish fluxguard to npm
         run: pnpm publish packages/fluxguard-node --access public --no-git-checks --provenance
         env:
