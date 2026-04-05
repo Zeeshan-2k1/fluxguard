@@ -1,0 +1,9 @@
+{
+  "name": "fixed-window-basic",
+  "algorithm": "FIXED_WINDOW",
+  "limit": 3,
+  "windowMs": 60000,
+  "key": "user:a",
+  "nowSequence": [0, 0, 0, 0, 60000],
+  "expected": [1, 1, 1, 0, 1]
+}

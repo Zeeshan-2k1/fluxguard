@@ -1,0 +1,6 @@
+# Shared Redis connection defaults for FluxGuard benchmark tooling (Artillery, JMeter env, chaos scripts).
+host: localhost
+port: 6379
+toxiproxy_port: 6380
+password: ""
+db: 0

@@ -1,0 +1,14 @@
+{
+  "name": "fluxguard-example-express",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "fluxguard": "workspace:*",
+    "ioredis": "^5.4.2",
+    "prom-client": "^15.1.3"
+  }
+}

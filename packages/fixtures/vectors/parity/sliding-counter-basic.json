@@ -1,0 +1,9 @@
+{
+  "name": "sliding-counter-basic",
+  "algorithm": "SLIDING_WINDOW_COUNTER",
+  "limit": 5,
+  "windowMs": 10000,
+  "key": "k1",
+  "nowSequence": [0, 1000, 2000, 3000, 4000, 5000, 11000],
+  "expected": [1, 1, 1, 1, 1, 0, 1]
+}

@@ -1,0 +1,35 @@
+# Reusable benchmark scenario parameters (reference for docs and tooling; not loaded automatically by Artillery).
+scenarios:
+  - name: baseline
+    algorithm: none
+    rps: 1000
+    duration_seconds: 60
+    warmup_seconds: 30
+    notes: "No rate limiter — measures raw app + network baseline."
+
+  - name: fixed-window
+    algorithm: FIXED_WINDOW
+    rps: 1000
+    duration_seconds: 60
+    warmup_seconds: 30
+    limit: 500
+    windowMs: 1000
+
+  - name: sliding-window-counter
+    algorithm: SLIDING_WINDOW_COUNTER
+    flagship: true
+    rps: 1000
+    duration_seconds: 60
+    warmup_seconds: 30
+    limit: 500
+    windowMs: 1000
+
+  - name: token-bucket
+    algorithm: TOKEN_BUCKET
+    rps: 1000
+    duration_seconds: 60
+    warmup_seconds: 30
+    limit: 500
+    windowMs: 1000
+
+num_identifiers: 50

@@ -1,0 +1,9 @@
+{
+  "name": "token-bucket-basic",
+  "algorithm": "TOKEN_BUCKET",
+  "limit": 2,
+  "windowMs": 1000,
+  "key": "ip:1",
+  "nowSequence": [0, 0, 0, 1100, 1100],
+  "expected": [1, 1, 0, 1, 1]
+}

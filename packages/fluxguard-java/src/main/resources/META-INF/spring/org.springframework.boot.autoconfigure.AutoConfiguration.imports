@@ -1,0 +1,2 @@
+com.fluxguard.spring.FluxGuardAutoConfiguration
+com.fluxguard.spring.FluxGuardWebMvcConfig

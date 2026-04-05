@@ -1,0 +1,62 @@
+# Docker Compose stack for FluxGuard benchmarks only — Redis, Toxiproxy (Redis path), Node and Java example apps.
+services:
+  redis:
+    image: redis:7-alpine
+    # Host port defaults to 16379 so a local/dev Redis can keep using 6379. Override: BENCHMARK_REDIS_HOST_PORT=6379
+    ports:
+      - "${BENCHMARK_REDIS_HOST_PORT:-16379}:6379"
+    networks: [fluxguard-bench]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:latest
+    ports:
+      - "8474:8474"
+      - "6380:6380"
+    volumes:
+      - ../chaos/toxiproxy-config.json:/config.json:ro
+    command: ["toxiproxy-server", "-config", "/config.json", "-host", "0.0.0.0"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks: [fluxguard-bench]
+
+  fluxguard-node-app:
+    build:
+      context: ../..
+      dockerfile: examples/express-app/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      REDIS_HOST: toxiproxy
+      REDIS_PORT: "6380"
+      REDIS_COMMAND_TIMEOUT_MS: "50"
+    depends_on:
+      redis:
+        condition: service_healthy
+      toxiproxy:
+        condition: service_started
+    networks: [fluxguard-bench]
+
+  fluxguard-java-app:
+    build:
+      context: ../..
+      dockerfile: examples/springboot-app/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      FLUXGUARD_REDIS_URI: redis://toxiproxy:6380
+    depends_on:
+      redis:
+        condition: service_healthy
+      toxiproxy:
+        condition: service_started
+    networks: [fluxguard-bench]
+
+networks:
+  fluxguard-bench:
+    name: fluxguard-bench

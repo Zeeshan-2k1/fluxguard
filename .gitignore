@@ -1,0 +1,43 @@
+# Dependencies & package managers
+node_modules/
+.pnpm-store/
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# JS/TS tooling
+coverage/
+.turbo/
+*.tsbuildinfo
+.eslintcache
+*.tgz
+
+# Environment (do not commit secrets)
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Logs & temp
+*.log
+*.swp
+.cache/
+
+# Project-specific
+.cursor/plans/
+*.docx
+
+# Benchmark artifacts (keep .gitkeep only)
+benchmarks/results/*
+!benchmarks/results/.gitkeep

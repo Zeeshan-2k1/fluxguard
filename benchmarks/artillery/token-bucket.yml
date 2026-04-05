@@ -1,0 +1,26 @@
+# Artillery: Token Bucket (expect ~50% 429 at 1000 RPS with limit 500/s).
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 30
+      arrivalRate: 100
+      name: Warmup
+    - duration: 60
+      arrivalRate: 1000
+      name: Sustained
+  processor: "./processor.js"
+  plugins:
+    expect: {}
+scenarios:
+  - name: Token bucket
+    flow:
+      - get:
+          url: "/api/benchmark/test/token-bucket"
+          beforeRequest: "stampRequest"
+          afterResponse: "afterResponse"
+          headers:
+            x-api-key: "bench-user-{{ $randomNumber(1, 50) }}"
+          expect:
+            - statusCode:
+                - 200
+                - 429

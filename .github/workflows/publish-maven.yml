@@ -1,0 +1,42 @@
+name: Publish Maven Central
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  maven:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      - name: Set release version from tag
+        id: version
+        working-directory: packages/fluxguard-java
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+          if [ -z "$VERSION" ]; then
+            echo "Empty version from tag: $TAG" >&2
+            exit 1
+          fi
+          chmod +x mvnw
+          ./mvnw -B versions:set -DnewVersion="$VERSION" -DgenerateBackupPoms=false
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Deploy to OSSRH (Maven Central)
+        working-directory: packages/fluxguard-java
+        run: ./mvnw -B -P release clean deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

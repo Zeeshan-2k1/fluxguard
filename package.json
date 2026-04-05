@@ -1,0 +1,19 @@
+{
+  "name": "fluxguard-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "clean": "pnpm -r run clean",
+    "benchmark": "bash benchmarks/scripts/run-all.sh",
+    "benchmark:node": "bash benchmarks/scripts/run-all.sh --skip-java"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "artillery": "^2.0.21"
+  }
+}

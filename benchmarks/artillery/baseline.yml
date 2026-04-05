@@ -1,0 +1,22 @@
+# Artillery load test: Node.js baseline without FluxGuard (NFR-01 baseline p99).
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 30
+      arrivalRate: 100
+      name: Warmup
+    - duration: 60
+      arrivalRate: 1000
+      name: Sustained
+  processor: "./processor.js"
+  plugins:
+    expect: {}
+scenarios:
+  - name: Baseline ping
+    flow:
+      - get:
+          url: "/api/benchmark/ping"
+          beforeRequest: "stampRequest"
+          afterResponse: "afterResponse"
+          expect:
+            - statusCode: 200

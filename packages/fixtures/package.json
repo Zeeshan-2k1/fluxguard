@@ -1,0 +1,31 @@
+{
+  "name": "@fluxguard/fixtures",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./vectors/*": "./vectors/*"
+  },
+  "files": [
+    "dist",
+    "vectors"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "clean": "rm -rf dist",
+    "test": "node --test",
+    "lint": "node -e \"console.log('fixtures: lint skipped')\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
