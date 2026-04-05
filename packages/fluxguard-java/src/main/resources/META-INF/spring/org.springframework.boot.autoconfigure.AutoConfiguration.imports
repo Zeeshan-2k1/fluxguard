@@ -1,2 +1,2 @@
-com.fluxguard.spring.FluxGuardAutoConfiguration
-com.fluxguard.spring.FluxGuardWebMvcConfig
+io.github.zeeshan2k1.spring.FluxGuardAutoConfiguration
+io.github.zeeshan2k1.spring.FluxGuardWebMvcConfig

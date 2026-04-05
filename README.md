@@ -7,7 +7,7 @@ Polyglot distributed rate limiting: **Node.js (TypeScript)** and **Java**, with 
 | Path | Description |
 |------|-------------|
 | [packages/fluxguard-node](packages/fluxguard-node) | npm package `fluxguard` — core, `RedisStore`, Express middleware, Prometheus helpers |
-| [packages/fluxguard-java](packages/fluxguard-java) | Maven `com.fluxguard:fluxguard-java` — Lettuce, Spring Boot auto-config, `@RateLimit`, Micrometer helpers |
+| [packages/fluxguard-java](packages/fluxguard-java) | Maven `io.github.zeeshan-2k1:fluxguard-java` — Java packages under `io.github.zeeshan2k1`, Lettuce, Spring Boot auto-config, `@RateLimit`, Micrometer helpers |
 | [packages/fixtures](packages/fixtures) | `@fluxguard/fixtures` — shared JSON parity vectors for Node + Java tests |
 | [examples/express-app](examples/express-app) | Sample Express + `/metrics` |
 | [benchmarks](benchmarks) | Artillery YAML for load experiments |
@@ -49,7 +49,17 @@ chmod +x mvnw   # once, if needed
 
 If you prefer Homebrew: `brew install maven` and then `mvn verify` works the same.
 
-Use `FluxGuardConfig` with an optional `RedisClient` from Lettuce; clock via `LongSupplier`. Spring Boot: `fluxguard.enabled=true`, optional `fluxguard.redis.enabled=true` and `fluxguard.redis.uri`.
+Use `io.github.zeeshan2k1.core.FluxGuard` / `FluxGuardConfig` with an optional `RedisClient` from Lettuce; clock via `LongSupplier`. Spring Boot: `fluxguard.enabled=true`, optional `fluxguard.redis.enabled=true` and `fluxguard.redis.uri`.
+
+Maven dependency:
+
+```xml
+<dependency>
+  <groupId>io.github.zeeshan-2k1</groupId>
+  <artifactId>fluxguard-java</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
 
 ## Algorithms
 
@@ -62,9 +72,9 @@ Artifacts publish automatically when you **publish a GitHub Release** (not only 
 | Artifact | Workflow | Repository secrets |
 |----------|----------|-------------------|
 | **npm** (`fluxguard`) | [.github/workflows/publish-npm.yml](.github/workflows/publish-npm.yml) | `NPM_TOKEN` — [npm access token](https://docs.npmjs.com/creating-and-viewing-access-tokens) with publish scope |
-| **Maven Central** `com.fluxguard:fluxguard-java` | [.github/workflows/publish-maven.yml](.github/workflows/publish-maven.yml) | `MAVEN_USERNAME` and `MAVEN_PASSWORD` — [Central Portal user token](https://central.sonatype.org/publish/generate-portal-token/) for OSSRH; `MAVEN_GPG_PRIVATE_KEY` — full ASCII-armored private key; `MAVEN_GPG_PASSPHRASE` — key passphrase |
+| **Maven Central** `io.github.zeeshan-2k1:fluxguard-java` | [.github/workflows/publish-maven.yml](.github/workflows/publish-maven.yml) | `MAVEN_USERNAME` and `MAVEN_PASSWORD` — [Central Portal user token](https://central.sonatype.org/publish/generate-portal-token/) for OSSRH; `MAVEN_GPG_PRIVATE_KEY` — full ASCII-armored private key; `MAVEN_GPG_PASSPHRASE` — key passphrase |
 
-**One-time Maven setup:** Register the `com.fluxguard` namespace in [Sonatype Central](https://central.sonatype.com/), prove ownership, and ensure your OSS token is allowed to publish that `groupId`. Locally you can dry-run with `./mvnw -P release verify` only after importing a GPG key (signing runs in the `release` profile).
+**One-time Maven setup:** Register the **`io.github.zeeshan-2k1`** namespace in [Sonatype Central](https://central.sonatype.com/) and ensure your OSS token can publish that `groupId`. Locally you can dry-run with `./mvnw -P release verify` only after importing a GPG key (signing runs in the `release` profile).
 
 **npm provenance** is enabled (`publishConfig.provenance`); the repository must be **public** on GitHub for provenance to succeed—otherwise remove `--provenance` from the workflow or drop `publishConfig.provenance` in the package.
 
