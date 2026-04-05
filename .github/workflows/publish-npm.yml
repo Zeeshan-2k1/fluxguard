@@ -13,7 +13,7 @@ jobs:
         ports:
           - 6379:6379
     env:
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://127.0.0.1:6379
       CI: true
     permissions:
       contents: read
